@@ -10,24 +10,24 @@ const STYLES = {
     small: {
         barSize: 1,
         fontSize: 14 / 16,
+        height: 24 / 16,
         iconSize: 16,
         padding: 4,
         paddingStart: 24,
-        strokeWidth: 1,
     },
     large: {
         barSize: 2,
         fontSize: 18 / 16,
+        height: 36 / 16,
         iconSize: 24,
         padding: 8,
         paddingStart: 36,
-        strokeWidth: 2,
     },
 };
 
 const STYLES_KEYS = Object.keys(STYLES);
 
-const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
+const IconInput = ({ label, icon, width = 250, size, placeholder, ...delegated }) => {
     if (!STYLES_KEYS.includes(size)) {
         throw new Error(`The size must be one of: ${STYLES_KEYS.join(', ')}. Received ${size}.`);
     }
@@ -35,16 +35,17 @@ const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
     const styles = STYLES[size];
 
     return (
-        <Wrapper style={{ '--width': `${width}px` }}>
+        <Wrapper style={{ '--height': `${styles.height}rem`, '--width': `${width}px` }}>
             <VisuallyHidden>{label}</VisuallyHidden>
             <IconWrapper
                 style={{
                     '--size': `${styles.iconSize}px`,
                 }}
             >
-                <Icon id={icon} strokeWidth={styles.strokeWidth} size={styles.iconSize} />
+                <Icon id={icon} size={styles.iconSize} />
             </IconWrapper>
             <Input
+                {...delegated}
                 style={{
                     '--font-size': `${styles.fontSize}rem`,
                     '--padding': `${styles.padding}px`,
@@ -64,6 +65,7 @@ const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
 const Wrapper = styled.div`
     color: ${COLORS.gray700};
     position: relative;
+    height: var(--height);
     width: var(--width);
 
     &:hover {
